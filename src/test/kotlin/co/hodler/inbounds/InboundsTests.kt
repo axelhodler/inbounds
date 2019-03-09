@@ -1,6 +1,7 @@
 package co.hodler.inbounds
 
 import co.hodler.inbounds.thirdparty.Point
+import co.hodler.inbounds.thirdparty.Polygon
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 
@@ -19,7 +20,7 @@ class InboundsTests {
                 .isFalse()
     }
 
-    //@Test
+    @Test
     fun `is in bounds`() {
         val rectangle = listOf(
                 Coordinate(1.0, 0.0),
@@ -45,12 +46,19 @@ class ConversionTests {
 
 class Inbounds(val contents: List<Coordinate>) {
     fun isInside(coordinate: Coordinate): Boolean {
-        return false
+        val polygon = Polygon.Builder()
+                .addVertex(toPoint(contents.first()))
+                .addVertex(toPoint(contents.get(1)))
+                .addVertex(toPoint(contents.get(2)))
+                .addVertex(toPoint(contents.last()))
+                .build()
+
+        return polygon.contains(toPoint(coordinate))
     }
 }
 
 data class Coordinate(val lat: Double, val lng: Double)
 
 fun toPoint(coordinate: Coordinate): Point {
-   return Point(coordinate.lng, coordinate.lat)
+    return Point(coordinate.lng, coordinate.lat)
 }
