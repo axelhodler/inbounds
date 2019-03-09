@@ -46,14 +46,12 @@ class ConversionTests {
 
 class Inbounds(val contents: List<Coordinate>) {
     fun isInside(coordinate: Coordinate): Boolean {
-        val polygon = Polygon.Builder()
-                .addVertex(toPoint(contents.first()))
-                .addVertex(toPoint(contents.get(1)))
-                .addVertex(toPoint(contents.get(2)))
-                .addVertex(toPoint(contents.last()))
-                .build()
-
-        return polygon.contains(toPoint(coordinate))
+        val polygonBuilder = Polygon.Builder()
+        contents.map { toPoint(it) }
+                .forEach {
+                    polygonBuilder.addVertex(it)
+                }
+        return polygonBuilder.build().contains(toPoint(coordinate))
     }
 }
 
